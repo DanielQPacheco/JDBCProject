@@ -5,19 +5,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema simply_company
+-- Schema simple_company
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema simply_company
+-- Schema simple_company
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `simply_company` DEFAULT CHARACTER SET utf8 ;
-USE `simply_company` ;
+CREATE SCHEMA IF NOT EXISTS `simple_company` DEFAULT CHARACTER SET utf8 ;
+USE `simple_company` ;
 
 -- -----------------------------------------------------
--- Table `simply_company`.`Customer`
+-- Table `simple_company`.`Customer`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `simply_company`.`Customer` (
+CREATE TABLE IF NOT EXISTS `simple_company`.`Customer` (
   `id` MEDIUMTEXT NOT NULL,
   `firstName` VARCHAR(45) NOT NULL,
   `lastName` VARCHAR(45) NOT NULL,
@@ -31,9 +31,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `simply_company`.`CreditCard`
+-- Table `simple_company`.`CreditCard`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `simply_company`.`CreditCard` (
+CREATE TABLE IF NOT EXISTS `simple_company`.`CreditCard` (
   `name` VARCHAR(45) NOT NULL,
   `ccNumber` VARCHAR(45) NOT NULL,
   `expDate` VARCHAR(45) NOT NULL,
@@ -42,16 +42,16 @@ CREATE TABLE IF NOT EXISTS `simply_company`.`CreditCard` (
   INDEX `fk_CreditCard_Customer1_idx` (`Customer_id` ASC),
   CONSTRAINT `fk_CreditCard_Customer1`
     FOREIGN KEY (`Customer_id`)
-    REFERENCES `simply_company`.`Customer` (`id`)
+    REFERENCES `simple_company`.`Customer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `simply_company`.`Address`
+-- Table `simple_company`.`Address`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `simply_company`.`Address` (
+CREATE TABLE IF NOT EXISTS `simple_company`.`Address` (
   `address1` VARCHAR(45) NOT NULL,
   `address2` VARCHAR(45) NOT NULL,
   `city` VARCHAR(45) NOT NULL,
@@ -61,16 +61,16 @@ CREATE TABLE IF NOT EXISTS `simply_company`.`Address` (
   INDEX `fk_Address_Customer_idx` (`Customer_id` ASC),
   CONSTRAINT `fk_Address_Customer`
     FOREIGN KEY (`Customer_id`)
-    REFERENCES `simply_company`.`Customer` (`id`)
+    REFERENCES `simple_company`.`Customer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `simply_company`.`Purchase`
+-- Table `simple_company`.`Purchase`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `simply_company`.`Purchase` (
+CREATE TABLE IF NOT EXISTS `simple_company`.`Purchase` (
   `id` MEDIUMTEXT NOT NULL,
   `productID` MEDIUMTEXT NOT NULL,
   `customerID` MEDIUMTEXT NOT NULL,
@@ -80,16 +80,16 @@ CREATE TABLE IF NOT EXISTS `simply_company`.`Purchase` (
   PRIMARY KEY (`Customer_id`),
   CONSTRAINT `fk_Purchase_Customer1`
     FOREIGN KEY (`Customer_id`)
-    REFERENCES `simply_company`.`Customer` (`id`)
+    REFERENCES `simple_company`.`Customer` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `simply_company`.`Product`
+-- Table `simple_company`.`Product`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `simply_company`.`Product` (
+CREATE TABLE IF NOT EXISTS `simple_company`.`Product` (
   `id` MEDIUMTEXT NOT NULL,
   `prodName` VARCHAR(45) NOT NULL,
   `prodDescription` VARCHAR(45) NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `simply_company`.`Product` (
   PRIMARY KEY (`Purchase_Customer_id`),
   CONSTRAINT `fk_Product_Purchase1`
     FOREIGN KEY (`Purchase_Customer_id`)
-    REFERENCES `simply_company`.`Purchase` (`Customer_id`)
+    REFERENCES `simple_company`.`Purchase` (`Customer_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
