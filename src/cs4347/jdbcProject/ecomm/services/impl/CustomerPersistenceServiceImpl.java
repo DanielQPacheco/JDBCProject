@@ -194,12 +194,13 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 	}
 
 	@Override
-	public List<Customer> retrieveByZipCode(String zipCode) throws SQLException, DAOException {
+	public List<Customer> retrieveByZipCode(String zipCode) throws SQLException, DAOException
+	{
 		CustomerDAO customerDAO = new CustomerDaoImpl();
-
 		Connection connection = dataSource.getConnection();
-		try {
-
+		
+		try
+		{
 			List<Customer> custList = customerDAO.retrieveByZipCode(connection, zipCode);
 
 			if(custList.size() == 0)
@@ -207,23 +208,54 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 
 			return custList;
 		}
-		catch (Exception ex) {
+		catch (Exception ex)
+		{
 			connection.rollback();
 			throw ex;
 		}
-		finally {
-			if (connection != null) {
+		finally
+		{
+			if (connection != null)
+			{
 				connection.setAutoCommit(true);
 			}
-			if (connection != null && !connection.isClosed()) {
+			if (connection != null && !connection.isClosed())
+			{
 				connection.close();
 			}
 		}
 	}
 
 	@Override
-	public List<Customer> retrieveByDOB(Date startDate, Date endDate) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Customer> retrieveByDOB(Date startDate, Date endDate) throws SQLException, DAOException
+	{
+		CustomerDAO customerDAO = new CustomerDaoImpl();
+		Connection connection = dataSource.getConnection();
+		
+		try
+		{
+			List<Customer> custList = customerDAO.retrieveByDOB(connection, startDate, endDate);
+
+			if(custList.size() == 0)
+				return null;
+
+			return custList;
+		}
+		catch (Exception ex)
+		{
+			connection.rollback();
+			throw ex;
+		}
+		finally
+		{
+			if (connection != null)
+			{
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed())
+			{
+				connection.close();
+			}
+		}
 	}
 }
