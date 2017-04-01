@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import java.sql.PreparedStatement;
+
 import cs4347.jdbcProject.ecomm.dao.AddressDAO;
 import cs4347.jdbcProject.ecomm.dao.CreditCardDAO;
 import cs4347.jdbcProject.ecomm.dao.CustomerDAO;
@@ -81,14 +83,77 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 
 	@Override
 	public Customer retrieve(Long id) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		CustomerDAO customerDAO = new CustomerDaoImpl();
+		AddressDAO addressDAO = new AddressDaoImpl();
+		CreditCardDAO creditCardDAO = new CreditCardDaoImpl();
+
+		Connection connection = dataSource.getConnection();
+		try {
+			connection.setAutoCommit(false);
+			Customer cust = customerDAO.retrieve(connection, id);
+			Long custID = cust.getId();
+
+			if (cust.getAddress() == null) {
+				throw new DAOException("Customers must include an Address instance.");
+			}
+			addressDAO.retrieveForCustomerID(connection, custID);
+
+			if (cust.getCreditCard() == null) {
+				throw new DAOException("Customers must include an CreditCard instance.");
+			}
+			creditCardDAO.retrieveForCustomerID(connection, custID);
+
+			connection.commit();
+			return cust;
+		}
+		catch (Exception ex) {
+			connection.rollback();
+			throw ex;
+		}
+		finally {
+			if (connection != null) {
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
 	}
 
 	@Override
 	public int update(Customer customer) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return 0;
+		CustomerDAO customerDAO = new CustomerDaoImpl();
+		AddressDAO addressDAO = new AddressDaoImpl();
+		CreditCardDAO creditCardDAO = new CreditCardDaoImpl();
+
+		Connection connection = dataSource.getConnection();
+		try {
+			connection.setAutoCommit(false);
+			int rows = customerDAO.update(connection, customer);
+			if (customer.getAddress() == null) {
+				throw new DAOException("Customers must include an Address instance.");
+			}
+			addressDAO.create(connection, customer.getAddress(), customer.getId());
+
+			if (customer.getCreditCard() == null) {
+				throw new DAOException("Customers must include an CreditCard instance.");
+			}
+			creditCardDAO.create(connection, customer.getCreditCard(), customer.getId());
+			connection.commit();
+			return rows;
+		}
+		catch (Exception ex) {
+			connection.rollback();
+			throw ex;
+		}
+		finally {
+			if (connection != null) {
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
 	}
 
 	@Override
@@ -98,15 +163,13 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 	}
 
 	@Override
-	public List<Customer> retrieveByZipCode(String zipCode)
-			throws SQLException, DAOException {
+	public List<Customer> retrieveByZipCode(String zipCode) throws SQLException, DAOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<Customer> retrieveByDOB(Date startDate, Date endDate)
-			throws SQLException, DAOException {
+	public List<Customer> retrieveByDOB(Date startDate, Date endDate) throws SQLException, DAOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
