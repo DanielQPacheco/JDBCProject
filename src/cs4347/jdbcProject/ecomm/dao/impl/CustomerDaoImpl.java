@@ -16,26 +16,26 @@ import cs4347.jdbcProject.ecomm.util.DAOException;
 public class CustomerDaoImpl implements CustomerDAO
 {
 	private static final String insertSQL =
-			"INSERT INTO CUSTOMER (firstName, lastName, gender, dob, email, address, creditCard) "
-			+ "VALUES (?, ?, ?, ?, ?, ?, ?);";
+			"INSERT INTO customer (firstName, lastName, gender, dob, email) "
+			+ "VALUES (?, ?, ?, ?, ?);";
 	
 	private static final String selectSQL =
-			"SELECT id, firstName, lastName, gender, dob, email, address, creditCard "
+			"SELECT id, firstName, lastName, gender, dob, email "
 			+ "FROM customer where id = ?;";
 	
 	private static String updateSQL = 
-			"UPDATE customer SET firstName = ?, lastName = ?, gender = ?, dob = ?, email = ?, address = ?, creditCard = ? "
+			"UPDATE customer SET firstName = ?, lastName = ?, gender = ?, dob = ?, email = ? "
 			+ "WHERE id = ?;";
 	
 	final static String deleteSQL =
 			"DELETE FROM customer WHERE id = ?;";
 	
 	final static String selectZipcodeSQL = 
-			"SELECT id, firstName, lastName, gender, dob, email, address, creditCard "
+			"SELECT id, firstName, lastName, gender, dob, email "
 			+ "FROM customer WHERE zipcode = ?;";
 	
 	final static String selectDobSQL = 
-			"SELECT id, firstName, lastName, gender, dob, email, address, creditCard "
+			"SELECT id, firstName, lastName, gender, dob, email  "
 			+ "FROM customer WHERE dob BETWEEN ? AND ?;";
 
 	public Customer create(Connection connection, Customer customer) throws SQLException, DAOException
@@ -52,10 +52,9 @@ public class CustomerDaoImpl implements CustomerDAO
 			ps.setString(1, customer.getFirstName());
 			ps.setString(2, customer.getLastName());
 			ps.setString(3, Character.toString(customer.getGender()));
-			//ps.setString(4, customer.getDob());
+			java.sql.Date sqlDate = new java.sql.Date(customer.getDob().getTime());
+			ps.setDate(4, sqlDate);
 			ps.setString(5, customer.getEmail());
-			//ps.setString(6, customer.getAddress());
-			//ps.setString(7, customer.getCreditCard());
 			
 			int res = ps.executeUpdate();
 			if(res != 1)
@@ -104,10 +103,8 @@ public class CustomerDaoImpl implements CustomerDAO
 			cust.setFirstName(rs.getString("firstName"));
 			cust.setLastName(rs.getString("lastName"));
 			cust.setGender(rs.getString("gender").charAt(0));
-			//cust.setDate();
+			cust.setDob(rs.getDate("dob"));
 			cust.setEmail(rs.getString("email"));
-			//cust.setAddress();
-			//cust.setCreditCard();
 			
 			return cust;
 		}
@@ -138,10 +135,10 @@ public class CustomerDaoImpl implements CustomerDAO
 			ps.setString(1, customer.getFirstName());
 			ps.setString(2, customer.getLastName());
 			ps.setString(3, Character.toString(customer.getGender()));
-			//ps.setString(4, customer.getDob());
+			java.sql.Date sqlDate = new java.sql.Date(customer.getDob().getTime());
+			ps.setDate(4, sqlDate);
 			ps.setString(5, customer.getEmail());
-			//ps.setString(6, customer.getAddress());
-			//ps.setString(7, customer.getCreditCard());
+			ps.setLong(6, customer.getId());
 
 			int rows = ps.executeUpdate();
 			return rows;
@@ -206,10 +203,8 @@ public class CustomerDaoImpl implements CustomerDAO
 				cust.setFirstName(rs.getString("firstName"));
 				cust.setLastName(rs.getString("lastName"));
 				cust.setGender(rs.getString("gender").charAt(0));
-				//cust.setDate();
+				cust.setDob(rs.getDate("dob"));
 				cust.setEmail(rs.getString("email"));
-				//cust.setAddress();
-				//cust.setCreditCard();
 				result.add(cust);
 			}
 			return result;
@@ -233,8 +228,10 @@ public class CustomerDaoImpl implements CustomerDAO
 		try
 		{
 		ps = connection.prepareStatement(selectDobSQL);
-		//ps.setString(1, startDate);
-		//ps.setString(2, endDate);
+		java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+		ps.setDate(1, sqlStartDate);
+		java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+		ps.setDate(2, sqlEndDate);
 		ResultSet rs = ps.executeQuery();
 		
 		List<Customer> result = new ArrayList<Customer>();
@@ -245,10 +242,8 @@ public class CustomerDaoImpl implements CustomerDAO
 			cust.setFirstName(rs.getString("firstName"));
 			cust.setLastName(rs.getString("lastName"));
 			cust.setGender(rs.getString("gender").charAt(0));
-			//cust.setDate();
+			cust.setDob(rs.getDate("dob"));
 			cust.setEmail(rs.getString("email"));
-			//cust.setAddress();
-			//cust.setCreditCard();
 			result.add(cust);
 		}
 		return result;
