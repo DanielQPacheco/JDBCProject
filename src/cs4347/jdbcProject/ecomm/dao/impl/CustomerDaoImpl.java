@@ -21,7 +21,7 @@ public class CustomerDaoImpl implements CustomerDAO
 	
 	private static final String selectSQL =
 			"SELECT id, firstName, lastName, gender, dob, email "
-			+ "FROM customer where id = ?;";
+			+ "FROM customer WHERE id = ?;";
 	
 	private static String updateSQL = 
 			"UPDATE customer SET firstName = ?, lastName = ?, gender = ?, dob = ?, email = ? "
@@ -38,6 +38,7 @@ public class CustomerDaoImpl implements CustomerDAO
 			"SELECT id, firstName, lastName, gender, dob, email  "
 			+ "FROM customer WHERE dob BETWEEN ? AND ?;";
 
+	
 	public Customer create(Connection connection, Customer customer) throws SQLException, DAOException
 	{
 		if(customer.getId() != null)
@@ -130,7 +131,8 @@ public class CustomerDaoImpl implements CustomerDAO
 		}
 		
 		PreparedStatement ps = null;
-		try {
+		try
+		{
 			ps = connection.prepareStatement(updateSQL);
 			ps.setString(1, customer.getFirstName());
 			ps.setString(2, customer.getLastName());
@@ -259,5 +261,4 @@ public class CustomerDaoImpl implements CustomerDAO
 			}
 		}
 	}
-	
 }
