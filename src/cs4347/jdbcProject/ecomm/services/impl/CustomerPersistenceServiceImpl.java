@@ -158,8 +158,38 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 
 	@Override
 	public int delete(Long id) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return 0;
+		CustomerDAO customerDAO = new CustomerDaoImpl();
+		AddressDAO addressDAO = new AddressDaoImpl();
+		CreditCardDAO creditCardDAO = new CreditCardDaoImpl();
+
+		Connection connection = dataSource.getConnection();
+		try {
+			connection.setAutoCommit(false);
+			int rows = customerDAO.delete(connection, id);
+			if (addressDAO.retrieveForCustomerID(connection, id) == null) {
+				throw new DAOException("Customers must include an Address instance.");
+			}
+			addressDAO.deleteForCustomerID(connection, id);
+
+			if (creditCardDAO.retrieveForCustomerID(connection, id) == null) {
+				throw new DAOException("Customers must include an CreditCard instance.");
+			}
+			creditCardDAO.deleteForCustomerID(connection, id);
+			connection.commit();
+			return rows;
+		}
+		catch (Exception ex) {
+			connection.rollback();
+			throw ex;
+		}
+		finally {
+			if (connection != null) {
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
 	}
 
 	@Override
