@@ -30,21 +30,99 @@ public class PurchasePersistenceServiceImpl implements PurchasePersistenceServic
 	}
 
 	@Override
-	public Purchase create(Purchase purchase) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return null;
+	public Purchase create(Purchase purchase) throws SQLException, DAOException
+	{
+		PurchaseDAO purchaseDAO = new PurchaseDaoImpl();
+		Connection connection = dataSource.getConnection();
+		
+		try
+		{
+			connection.setAutoCommit(false);
+			Purchase purc = purchaseDAO.create(connection, purchase);
+
+			connection.commit();
+			return purc;
+		}
+		catch (Exception ex)
+		{
+			connection.rollback();
+			throw ex;
+		}
+		finally
+		{
+			if (connection != null)
+			{
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed())
+			{
+				connection.close();
+			}
+		}
 	}
 
 	@Override
-	public Purchase retrieve(Long id) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return null;
+	public Purchase retrieve(Long id) throws SQLException, DAOException
+	{
+		PurchaseDAO purchaseDAO = new PurchaseDaoImpl();
+		Connection connection = dataSource.getConnection();
+
+		try
+		{
+			connection.setAutoCommit(false);
+			Purchase purc = purchaseDAO.retrieve(connection, id);
+
+			connection.commit();
+			return purc;
+		}
+		catch (Exception ex)
+		{
+			connection.rollback();
+			throw ex;
+		}
+		finally
+		{
+			if (connection != null)
+			{
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed())
+			{
+				connection.close();
+			}
+		}
 	}
 
 	@Override
-	public int update(Purchase purchase) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(Purchase purchase) throws SQLException, DAOException
+	{
+		PurchaseDAO purchaseDAO = new PurchaseDaoImpl();
+		Connection connection = dataSource.getConnection();
+		
+		try
+		{
+			connection.setAutoCommit(false);
+			int rows = purchaseDAO.update(connection, purchase);
+			
+			connection.commit();
+			return rows;
+		}
+		catch (Exception ex)
+		{
+			connection.rollback();
+			throw ex;
+		}
+		finally
+		{
+			if (connection != null)
+			{
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed())
+			{
+				connection.close();
+			}
+		}
 	}
 
 	@Override
@@ -60,7 +138,7 @@ public class PurchasePersistenceServiceImpl implements PurchasePersistenceServic
 			
 			if (purchaseDAO.retrieveForCustomerID(connection, id) == null)
 			{
-				throw new DAOException("Customers must include an Address instance.");
+				throw new DAOException("Purchase must include an instance.");
 			}
 
 			connection.commit();
@@ -71,7 +149,8 @@ public class PurchasePersistenceServiceImpl implements PurchasePersistenceServic
 			connection.rollback();
 			throw ex;
 		}
-		finally {
+		finally
+		{
 			if (connection != null)
 			{
 				connection.setAutoCommit(true);
