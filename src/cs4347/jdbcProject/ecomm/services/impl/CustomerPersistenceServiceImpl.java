@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.sql.DataSource;
 
@@ -194,8 +195,30 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 
 	@Override
 	public List<Customer> retrieveByZipCode(String zipCode) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		CustomerDAO customerDAO = new CustomerDaoImpl();
+
+		Connection connection = dataSource.getConnection();
+		try {
+
+			List<Customer> custList = customerDAO.retrieveByZipCode(connection, zipCode);
+
+			if(custList.size() == 0)
+				return null;
+
+			return custList;
+		}
+		catch (Exception ex) {
+			connection.rollback();
+			throw ex;
+		}
+		finally {
+			if (connection != null) {
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
 	}
 
 	@Override

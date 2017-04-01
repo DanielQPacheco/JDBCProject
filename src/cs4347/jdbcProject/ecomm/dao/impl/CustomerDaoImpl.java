@@ -19,26 +19,6 @@ public class CustomerDaoImpl implements CustomerDAO
 			"INSERT INTO customer (firstName, lastName, gender, dob, email) "
 			+ "VALUES (?, ?, ?, ?, ?);";
 	
-	private static final String selectSQL =
-			"SELECT id, firstName, lastName, gender, dob, email "
-			+ "FROM customer WHERE id = ?;";
-	
-	private static String updateSQL = 
-			"UPDATE customer SET firstName = ?, lastName = ?, gender = ?, dob = ?, email = ? "
-			+ "WHERE id = ?;";
-	
-	final static String deleteSQL =
-			"DELETE FROM customer WHERE id = ?;";
-	
-	final static String selectZipcodeSQL = 
-			"SELECT id, firstName, lastName, gender, dob, email "
-			+ "FROM customer WHERE zipcode = ?;";
-	
-	final static String selectDobSQL = 
-			"SELECT id, firstName, lastName, gender, dob, email  "
-			+ "FROM customer WHERE dob BETWEEN ? AND ?;";
-
-	
 	public Customer create(Connection connection, Customer customer) throws SQLException, DAOException
 	{
 		if(customer.getId() != null)
@@ -80,6 +60,10 @@ public class CustomerDaoImpl implements CustomerDAO
 		}
 	}
 
+	
+	private static final String selectSQL =
+			"SELECT id, firstName, lastName, gender, dob, email "
+			+ "FROM customer WHERE id = ?;";
 
 	public Customer retrieve(Connection connection, Long id) throws SQLException, DAOException
 	{
@@ -123,6 +107,10 @@ public class CustomerDaoImpl implements CustomerDAO
 	}
 
 
+	private static String updateSQL = 
+			"UPDATE customer SET firstName = ?, lastName = ?, gender = ?, dob = ?, email = ? "
+			+ "WHERE id = ?;";
+	
 	public int update(Connection connection, Customer customer) throws SQLException, DAOException
 	{
 		if (customer.getId() == null)
@@ -158,6 +146,9 @@ public class CustomerDaoImpl implements CustomerDAO
 		}
 	}
 
+	
+	final static String deleteSQL =
+			"DELETE FROM customer WHERE id = ?;";
 
 	public int delete(Connection connection, Long id) throws SQLException, DAOException
 	{
@@ -167,7 +158,8 @@ public class CustomerDaoImpl implements CustomerDAO
 		}
 		
 		PreparedStatement ps = null;
-		try {
+		try
+		{
 			ps = connection.prepareStatement(deleteSQL);
 			ps.setLong(1, id);
 
@@ -186,7 +178,11 @@ public class CustomerDaoImpl implements CustomerDAO
 			}
 		}
 	}
-
+	
+	
+	final static String selectZipcodeSQL = 
+			"SELECT id, firstName, lastName, gender, dob, email "
+			+ "FROM customer WHERE zipcode = ?;";
 
 	public List<Customer> retrieveByZipCode(Connection connection, String zipCode) throws SQLException, DAOException
 	{
@@ -211,7 +207,8 @@ public class CustomerDaoImpl implements CustomerDAO
 			}
 			return result;
 		}
-		finally {
+		finally
+		{
 			if (ps != null && !ps.isClosed())
 			{
 				ps.close();
@@ -222,35 +219,40 @@ public class CustomerDaoImpl implements CustomerDAO
 			}
 		}
 	}
-
+	
+	
+	final static String selectDobSQL = 
+			"SELECT id, firstName, lastName, gender, dob, email  "
+			+ "FROM customer WHERE dob BETWEEN ? AND ?;";
 
 	public List<Customer> retrieveByDOB(Connection connection, Date startDate, Date endDate) throws SQLException, DAOException
 	{
 		PreparedStatement ps = null;
 		try
 		{
-		ps = connection.prepareStatement(selectDobSQL);
-		java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
-		ps.setDate(1, sqlStartDate);
-		java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
-		ps.setDate(2, sqlEndDate);
-		ResultSet rs = ps.executeQuery();
-		
-		List<Customer> result = new ArrayList<Customer>();
-		while (rs.next())
+			ps = connection.prepareStatement(selectDobSQL);
+			java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
+			ps.setDate(1, sqlStartDate);
+			java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
+			ps.setDate(2, sqlEndDate);
+			ResultSet rs = ps.executeQuery();
+			
+			List<Customer> result = new ArrayList<Customer>();
+			while (rs.next())
+			{
+				Customer cust = new Customer();
+				cust.setId(rs.getLong("id"));
+				cust.setFirstName(rs.getString("firstName"));
+				cust.setLastName(rs.getString("lastName"));
+				cust.setGender(rs.getString("gender").charAt(0));
+				cust.setDob(rs.getDate("dob"));
+				cust.setEmail(rs.getString("email"));
+				result.add(cust);
+			}
+			return result;
+		}
+		finally
 		{
-			Customer cust = new Customer();
-			cust.setId(rs.getLong("id"));
-			cust.setFirstName(rs.getString("firstName"));
-			cust.setLastName(rs.getString("lastName"));
-			cust.setGender(rs.getString("gender").charAt(0));
-			cust.setDob(rs.getDate("dob"));
-			cust.setEmail(rs.getString("email"));
-			result.add(cust);
-		}
-		return result;
-		}
-		finally {
 			if (ps != null && !ps.isClosed())
 			{
 				ps.close();

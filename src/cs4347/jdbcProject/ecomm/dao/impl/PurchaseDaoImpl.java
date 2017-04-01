@@ -19,29 +19,6 @@ public class PurchaseDaoImpl implements PurchaseDAO
 	private static final String insertSQL =
 			"INSERT INTO purchase (productID, customerID, purchaseDate, purchaseAmount) "
 			+ "VALUES (?, ?, ?, ?);";
-	
-	private static final String selectSQL =
-			"SELECT id, productID, customerID, purchaseDate, purchaseAmount "
-			+ "FROM purchase WHERE id = ?;";
-	
-	private static String updateSQL = 
-			"UPDATE purchase SET productID = ?, customerID = ?, purchaseDate = ?, purchaseAmount = ? "
-			+ "WHERE id = ?;";
-	
-	final static String deleteSQL =
-			"DELETE FROM purchase WHERE id = ?;";
-	
-	final static String selectCustomerIDSQL = 
-			"SELECT id, productID, customerID, purchaseDate, purchaseAmount "
-			+ "FROM purchase WHERE customerID = ?;";
-	
-	final static String selectProductIDSQL = 
-			"SELECT id, productID, customerID, purchaseDate, purchaseAmount "
-			+ "FROM purchase WHERE productID = ?;";
-	
-	final static String selectPurchaseSummarySQL = 
-			"SELECT purchaseAmount "
-			+ "FROM purchase WHERE customerID = ?;";
 
 	public Purchase create(Connection connection, Purchase purchase) throws SQLException, DAOException
 	{
@@ -83,6 +60,10 @@ public class PurchaseDaoImpl implements PurchaseDAO
 		}
 	}
 
+	
+	private static final String selectSQL =
+			"SELECT id, productID, customerID, purchaseDate, purchaseAmount "
+			+ "FROM purchase WHERE id = ?;";
 
 	public Purchase retrieve(Connection connection, Long id) throws SQLException, DAOException
 	{
@@ -124,6 +105,10 @@ public class PurchaseDaoImpl implements PurchaseDAO
 		}
 	}
 
+	
+	private static String updateSQL = 
+			"UPDATE purchase SET productID = ?, customerID = ?, purchaseDate = ?, purchaseAmount = ? "
+			+ "WHERE id = ?;";
 
 	public int update(Connection connection, Purchase purchase) throws SQLException, DAOException
 	{
@@ -159,7 +144,10 @@ public class PurchaseDaoImpl implements PurchaseDAO
 			}
 		}
 	}
-
+	
+	
+	final static String deleteSQL =
+			"DELETE FROM purchase WHERE id = ?;";
 
 	public int delete(Connection connection, Long id) throws SQLException, DAOException
 	{
@@ -169,7 +157,8 @@ public class PurchaseDaoImpl implements PurchaseDAO
 		}
 		
 		PreparedStatement ps = null;
-		try {
+		try
+		{
 			ps = connection.prepareStatement(deleteSQL);
 			ps.setLong(1, id);
 
@@ -190,6 +179,10 @@ public class PurchaseDaoImpl implements PurchaseDAO
 	}
 
 
+	final static String selectCustomerIDSQL = 
+			"SELECT id, productID, customerID, purchaseDate, purchaseAmount "
+			+ "FROM purchase WHERE customerID = ?;";
+	
 	public List<Purchase> retrieveForCustomerID(Connection connection, Long customerID) throws SQLException, DAOException
 	{
 		PreparedStatement ps = null;
@@ -212,7 +205,8 @@ public class PurchaseDaoImpl implements PurchaseDAO
 			}
 			return result;
 		}
-		finally {
+		finally
+		{
 			if (ps != null && !ps.isClosed())
 			{
 				ps.close();
@@ -224,11 +218,11 @@ public class PurchaseDaoImpl implements PurchaseDAO
 		}
 	}
 	
-	//final static String selectProductIDSQL = 
-		//	"SELECT id, productID, customerID, purchaseDate, purchaseAmount "
-		//	+ "FROM purchase WHERE productID = ?;";
-
-
+	
+	final static String selectProductIDSQL = 
+			"SELECT id, productID, customerID, purchaseDate, purchaseAmount "
+			+ "FROM purchase WHERE productID = ?;";
+	
 	public List<Purchase> retrieveForProductID(Connection connection, Long productID) throws SQLException, DAOException
 	{
 		PreparedStatement ps = null;
@@ -251,7 +245,8 @@ public class PurchaseDaoImpl implements PurchaseDAO
 			}
 			return result;
 		}
-		finally {
+		finally
+		{
 			if (ps != null && !ps.isClosed())
 			{
 				ps.close();
@@ -263,6 +258,10 @@ public class PurchaseDaoImpl implements PurchaseDAO
 		}
 	}
 
+	
+	final static String selectPurchaseSummarySQL = 
+			"SELECT purchaseAmount "
+			+ "FROM purchase WHERE customerID = ?;";
 
 	public PurchaseSummary retrievePurchaseSummary(Connection connection, Long customerID) throws SQLException, DAOException
 	{
@@ -304,7 +303,8 @@ public class PurchaseDaoImpl implements PurchaseDAO
 				return null;
 			}
 		}
-		finally {
+		finally
+		{
 			if (ps != null && !ps.isClosed())
 			{
 				ps.close();
