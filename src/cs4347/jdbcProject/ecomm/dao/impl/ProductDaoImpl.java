@@ -16,7 +16,7 @@ public class ProductDaoImpl implements ProductDAO
 {
 
 	private static final String insertSQL =
-			"INSERT INTO category (prodName, prodDescription, prodCategory, prodUPC) "
+			"INSERT INTO Product (prodName, prodDescription, prodCategory, prodUPC) "
 			+ "VALUES (?, ?, ?, ?);";
 	
 	private static final String selectSQL =
