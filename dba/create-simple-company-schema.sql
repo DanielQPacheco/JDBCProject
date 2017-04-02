@@ -18,7 +18,7 @@ USE `simple_company` ;
 -- Table `simple_company`.`Customer`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `simple_company`.`Customer` (
-  `id` MEDIUMTEXT NOT NULL,
+  `id` BIGINT(20) NOT NULL,
   `firstName` VARCHAR(45) NOT NULL,
   `lastName` VARCHAR(45) NOT NULL,
   `gender` CHAR(1) NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `simple_company`.`CreditCard` (
   `ccNumber` VARCHAR(45) NOT NULL,
   `expDate` VARCHAR(45) NOT NULL,
   `securityCode` VARCHAR(45) NOT NULL,
-  `Customer_id` MEDIUMTEXT NOT NULL,
+  `Customer_id` BIGINT(20) NOT NULL,
   INDEX `fk_CreditCard_Customer1_idx` (`Customer_id` ASC),
   CONSTRAINT `fk_CreditCard_Customer1`
     FOREIGN KEY (`Customer_id`)
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `simple_company`.`Address` (
   `city` VARCHAR(45) NOT NULL,
   `state` VARCHAR(45) NOT NULL,
   `zipcode` VARCHAR(45) NOT NULL,
-  `Customer_id` MEDIUMTEXT NOT NULL,
+  `Customer_id` BIGINT(20) NOT NULL,
   INDEX `fk_Address_Customer_idx` (`Customer_id` ASC),
   CONSTRAINT `fk_Address_Customer`
     FOREIGN KEY (`Customer_id`)
@@ -71,12 +71,12 @@ ENGINE = InnoDB;
 -- Table `simple_company`.`Purchase`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `simple_company`.`Purchase` (
-  `id` MEDIUMTEXT NOT NULL,
-  `productID` MEDIUMTEXT NOT NULL,
-  `customerID` MEDIUMTEXT NOT NULL,
+  `id` BIGINT(20) NOT NULL,
+  `productID` BIGINT(20) NOT NULL,
+  `customerID` BIGINT(20) NOT NULL,
   `purchaseDate` DATE NOT NULL,
   `purchaseAmount` DECIMAL NOT NULL,
-  `Customer_id` MEDIUMTEXT NOT NULL,
+  `Customer_id` BIGINT(20) NOT NULL,
   PRIMARY KEY (`Customer_id`),
   CONSTRAINT `fk_Purchase_Customer1`
     FOREIGN KEY (`Customer_id`)
@@ -90,12 +90,12 @@ ENGINE = InnoDB;
 -- Table `simple_company`.`Product`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `simple_company`.`Product` (
-  `id` MEDIUMTEXT NOT NULL,
+  `id` BIGINT(20) NOT NULL,
   `prodName` VARCHAR(45) NOT NULL,
   `prodDescription` VARCHAR(45) NOT NULL,
   `prodCategory` INT NOT NULL,
   `prodUPC` VARCHAR(45) NOT NULL,
-  `Purchase_Customer_id` MEDIUMTEXT NOT NULL,
+  `Purchase_Customer_id` BIGINT(20) NOT NULL,
   PRIMARY KEY (`Purchase_Customer_id`),
   CONSTRAINT `fk_Product_Purchase1`
     FOREIGN KEY (`Purchase_Customer_id`)
