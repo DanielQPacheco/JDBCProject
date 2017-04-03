@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `simple_company`.`Product` (
   PRIMARY KEY (`Purchase_Customer_id`),
   CONSTRAINT `fk_Product_Purchase1`
     FOREIGN KEY (`Purchase_Customer_id`)
-    REFERENCES `simple_company`.`Customer` (`id`)
+    REFERENCES `simple_company`.`Purchase` (`Customer_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
